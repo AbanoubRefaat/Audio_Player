@@ -1,0 +1,134 @@
+package com.example.coptichymnsi;
+
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
+import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+
+import java.io.IOException;
+
+public class Recording extends AppCompatActivity {
+
+   private Button record , play, stop,save;
+   private String outputFile;
+   private MediaRecorder mediaRecorder;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_recording);
+
+        record = (Button)findViewById(R.id.record_button);
+        play = (Button)findViewById(R.id.play_button);
+        stop = (Button)findViewById(R.id.stop_button);
+        save = (Button)findViewById(R.id.save_button);
+
+        play.setEnabled(false);
+        save.setEnabled(false);
+        stop.setEnabled(false);
+
+        //setting media recorder
+
+        final MediaRecorder mediaRecorder = new MediaRecorder();
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+        mediaRecorder.setOutputFile(outputFile);
+
+        final MediaPlayer mediaPlayer = new MediaPlayer();
+
+        // saved file path
+        final String outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/recording.3gp";
+
+
+
+
+
+        record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mediaRecorder.prepare();
+                    mediaRecorder.start();
+                }catch (IllegalStateException ise){
+
+                }catch (IOException ie){
+
+                }
+                play.setEnabled(false);
+                stop.setEnabled(false);
+                record.setEnabled(false);
+                save.setEnabled(true);
+                Toast.makeText(getApplicationContext(), "Recording started", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mediaPlayer.setDataSource(outputFile);
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                    Toast.makeText(getApplicationContext(), "Playing Audio", Toast.LENGTH_LONG).show();
+
+                }catch (IOException ie){
+
+                }
+                stop.setEnabled(true);
+                record.setEnabled(false);
+                save.setEnabled(false);
+
+            }
+        });
+
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaRecorder.stop();
+                mediaRecorder.release();
+
+                record.setEnabled(true);
+                save.setEnabled(false);
+                play.setEnabled(true);
+
+
+            }
+        });
+
+
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mediaPlayer.stop();
+
+                record.setEnabled(true);
+                save.setEnabled(false);
+                play.setEnabled(true);
+
+
+            }
+        });
+
+
+    }
+
+    public void setOutputFile(){
+
+        if (outputFile != null){
+
+// this should be converted into notes to match the hymns and exercises
+
+
+        }
+    }
+
+}
